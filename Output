@@ -1,0 +1,15 @@
+🤖 SmartImage Bot: Hello! I can organize your images easily. (Type 'bye' to exit)
+
+You: hi
+🤖 SmartImage Bot: Hi there! Need help organizing your images?
+
+You: organize images
+🤖 SmartImage Bot: Sure, let's organize your images! 📂 Please provide the folder paths.
+🤖 Please enter the path to your images folder: C:/Users/Kb/Pictures
+🤖 Please enter the path to save organized images: C:/Users/Kb/OrganizedPictures
+✅ Organized photo1.jpg -> C:/Users/Kb/OrganizedPictures/Large Images/2024/
+✅ Organized photo2.jpg -> C:/Users/Kb/OrganizedPictures/Medium Images/2023/
+✅ All images have been organized successfully!
+
+You: bye
+🤖 SmartImage Bot: Goodbye! 👋
