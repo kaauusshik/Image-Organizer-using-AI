@@ -1,0 +1,96 @@
+import os
+import shutil
+import random
+from PIL import Image
+from datetime import datetime
+
+# --- Image Organizer Functions ---
+
+def get_size_category(width, height):
+    if width >= 3000 or height >= 3000:
+        return "Large Images"
+    elif width >= 1000 or height >= 1000:
+        return "Medium Images"
+    else:
+        return "Small Images"
+
+def organize_images_by_size_and_date(source_folder, output_folder):
+    if not os.path.exists(source_folder):
+        print(f"Source folder '{source_folder}' does not exist.")
+        return
+    
+    os.makedirs(output_folder, exist_ok=True)
+
+    for filename in os.listdir(source_folder):
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.webp')):
+            file_path = os.path.join(source_folder, filename)
+            
+            try:
+                with Image.open(file_path) as img:
+                    width, height = img.size
+            except Exception as e:
+                print(f"Failed to open image {filename}: {e}")
+                continue
+            
+            size_folder = get_size_category(width, height)
+            modified_time = os.path.getmtime(file_path)
+            year_folder = str(datetime.fromtimestamp(modified_time).year)
+
+            final_folder_path = os.path.join(output_folder, size_folder, year_folder)
+            os.makedirs(final_folder_path, exist_ok=True)
+
+            shutil.copy2(file_path, new_file_path := os.path.join(final_folder_path, filename))
+
+            print(f"✅ Organized {filename} -> {final_folder_path}")
+
+    print("✅ All images have been organized successfully!")
+
+# --- AI Chatbot Functions ---
+
+responses = {
+    "greet": ["Hello! 👋", "Hi there! Need help organizing your images?", "Hey!"],
+    "organize_images": [
+        "Sure, let's organize your images! 📂 Please provide the folder paths."
+    ],
+    "goodbye": ["Goodbye! 👋", "See you next time!", "Bye-bye!"],
+    "unknown": ["Sorry, I didn't understand that. 🤔", "Could you rephrase?", "I'm not sure what you mean."]
+}
+
+keywords = {
+    "hello": "greet",
+    "hi": "greet",
+    "organize": "organize_images",
+    "sort": "organize_images",
+    "bye": "goodbye",
+    "goodbye": "goodbye",
+}
+
+def detect_intent(message):
+    for word in message.lower().split():
+        if word in keywords:
+            return keywords[word]
+    return "unknown"
+
+def chatbot_response(message):
+    intent = detect_intent(message)
+    return intent, random.choice(responses[intent])
+
+def chat():
+    print("\n🤖 SmartImage Bot: Hello! I can organize your images easily. (Type 'bye' to exit)")
+    while True:
+        user_input = input("\nYou: ")
+        intent, bot_reply = chatbot_response(user_input)
+        print(f"🤖 SmartImage Bot: {bot_reply}")
+        
+        if intent == "organize_images":
+            source = input("\n Please enter the path to your images folder: ")
+            output = input(" Please enter the path to save organized images: ")
+            organize_images_by_size_and_date(source, output)
+        
+        if intent == "goodbye":
+            break
+
+# --- Main Program ---
+
+if __name__ == "__main__":
+    chat()
