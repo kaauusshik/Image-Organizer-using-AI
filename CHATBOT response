@@ -1,0 +1,45 @@
+import random
+
+# Predefined intents (simple rule-based)
+responses = {
+    "greet": ["Hello!", "Hi there!", "Hey!", "Hi, how can I help you?"],
+    "organize_images": [
+        "Sure! I can help you organize images by size and date.",
+        "Let's start organizing your pictures."
+    ],
+    "goodbye": ["Goodbye!", "See you later!", "Bye! Have a great day!"],
+    "unknown": ["Sorry, I didn't understand that.", "Could you please rephrase?", "I'm not sure what you mean."]
+}
+
+# Keyword mapping
+keywords = {
+    "hello": "greet",
+    "hi": "greet",
+    "organize": "organize_images",
+    "sort": "organize_images",
+    "bye": "goodbye",
+    "goodbye": "goodbye",
+}
+
+def detect_intent(message):
+    for word in message.lower().split():
+        if word in keywords:
+            return keywords[word]
+    return "unknown"
+
+def chatbot_response(message):
+    intent = detect_intent(message)
+    return random.choice(responses[intent])
+
+def chat():
+    print("SmartImage Bot: Hello! Ask me anything about your images! (type 'bye' to exit)")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["bye", "exit", "quit"]:
+            print(" SmartImage Bot:", random.choice(responses["goodbye"]))
+            break
+        bot_reply = chatbot_response(user_input)
+        print("SmartImage Bot:", bot_reply)
+
+if __name__ == "__main__":
+    chat()
